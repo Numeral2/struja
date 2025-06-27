@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ušteda na Struji | Optimizirajte Vaše Troškove</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --primary-color: #0052ff;
+            --light-blue: #e6f0ff;
+            --success-color: #1aae5a;
+            --bg-color: #f7f9fc;
+            --surface-color: #ffffff;
+            --text-color: #0f172a;
+            --subtle-text: #64748b;
+            --border-color: #e2e8f0;
+            --border-radius: 12px;
+        }
+        
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .section { padding: 100px 20px; max-width: 900px; margin: 0 auto; text-align: center; }
+        .container { max-width: 700px; margin: 0 auto; }
+        
+        h1 { font-size: clamp(3rem, 7vw, 4.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 20px;}
+        h1 span { color: var(--primary-color); }
+        h2 { font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 900; margin-top: 0; margin-bottom: 20px;}
+        p.subtitle { font-size: 1.25rem; color: var(--subtle-text); max-width: 650px; margin: 0 auto 40px auto; }
+        
+        .button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 16px 32px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .button:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0, 82, 255, 0.2); }
+        .button.telegram { background-color: #2AABEE; }
+        .button.telegram:hover { box-shadow: 0 8px 25px rgba(42, 171, 238, 0.25); }
+        
+        .calculator-container {
+            background-color: var(--surface-color);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 20px 50px -10px rgba(15, 23, 42, 0.08);
+        }
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            align-items: flex-end;
+            margin-top: 30px;
+        }
+        .form-group { text-align: left; }
+        .form-group label { font-weight: 700; margin-bottom: 8px; font-size: 1rem; display: block; }
+        .form-group input, .form-group select {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            font-size: 1rem;
+            padding: 14px;
+            border-radius: var(--border-radius);
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        #calculator-result {
+            margin-top: 40px;
+            background-color: var(--light-blue);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            display: none;
+        }
+        #savings-amount { font-size: 3rem; font-weight: 900; color: var(--success-color); }
+        
+        .subscription-section { background-color: var(--surface-color); }
+        
+        footer { background-color: var(--text-color); color: #fff; text-align: center; padding: 40px 20px; font-size: 0.9em;}
+        footer p { color: var(--subtle-text); }
+        footer a { color: #fff; text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <section class="section">
+        <div class="container">
+            <h1>Uštede na struji od <span>100 do 5000€</span> mjesečno.</h1>
+            <p class="subtitle">Prestanite plaćati visoke račune. Naš alat vam pokazuje točno koliko možete uštedjeti prebacivanjem rada vaših strojeva u najjeftinije sate.</p>
+        </div>
+        
+        <div id="kalkulator" class="calculator-container">
+            <h2>Testiraj svoju mjesečnu uštedu</h2>
+            <div id="calculator-form" class="calculator-grid">
+                <div class="form-group">
+                    <label for="kwh">Potrošnja stroja (kWh)</label>
+                    <input type="number" id="kwh" value="10" min="0.1" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="start-time">Stroj radi OD:</label>
+                    <select id="start-time"></select>
+                </div>
+                <div class="form-group">
+                    <label for="end-time">Stroj radi DO:</label>
+                    <select id="end-time"></select>
+                </div>
+                 <div class="form-group">
+                    <button id="calculate-btn" class="button" style="width:100%;">Izračunaj uštedu</button>
+                </div>
+            </div>
+            <div id="calculator-result">
+                <p>Prebacivanjem u optimalno vrijeme, vaša potencijalna mjesečna ušteda je:</p>
+                <p id="savings-amount">€0.00</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="pretplata" class="section subscription-section">
+        <div class="container">
+            <h2>Postavite Svoje Personalizirane Obavijesti.</h2>
+            <p class="subtitle">Povežite se s našim pametnim Telegram botom. Svaku večer u ponoć primajte besplatan i detaljan izvještaj o cijenama struje za cijeli idući dan.</p>
+            <div class="subscription-options" style="margin-top: 30px;">
+                <a href="https://t.me/StrujaAi_bot" target="_blank" class="button telegram">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13H2l2.67-6.67L2 2zM11 13l4.5 9L22 2z"/></svg>
+                    Poveži se s Botom
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <p>Svi podaci o cijenama su sa službene platforme <a href="https://transparency.entsoe.eu/" target="_blank" rel="noopener noreferrer">ENTSO-E</a>. Procjene uštede su informativnog karaktera.</p>
+        <p>&copy; 2025. Sva prava pridržana / All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- POPULACIJA VREMENA ---
+            const startTimeSelect = document.getElementById('start-time');
+            const endTimeSelect = document.getElementById('end-time');
+            for (let i = 0; i < 24; i++) {
+                const time = `${String(i).padStart(2, '0')}:00`;
+                startTimeSelect.innerHTML += `<option value="${i}">${time}</option>`;
+                endTimeSelect.innerHTML += `<option value="${i}">${time}</option>`;
+            }
+            startTimeSelect.value = "8"; // Default start time 08:00
+            endTimeSelect.value = "16"; // Default end time 16:00
+
+            // --- KALKULATOR LOGIKA ---
+            const calculateBtn = document.getElementById('calculate-btn');
+            const resultDiv = document.getElementById('calculator-result');
+            const savingsAmountP = document.getElementById('savings-amount');
+
+            const hourlyPrices = [
+                118.45, 121.72, 113.51, 112.37, 109.62, 110.79, 112.24, 113.20, 
+                107.70, 91.45, 79.26, 67.45, 54.95, 64.62, 69.31, 91.89,
+                96.77, 115.81, 128.88, 147.48, 166.43, 145.51, 129.88, 113.67
+            ];
+
+            calculateBtn.addEventListener('click', () => {
+                const kwh = parseFloat(document.getElementById('kwh').value);
+                const startHour = parseInt(startTimeSelect.value);
+                const endHour = parseInt(endTimeSelect.value);
+
+                if (isNaN(kwh) || kwh <= 0) {
+                    alert('Molimo unesite ispravnu potrošnju (kWh).');
+                    return;
+                }
+                if (startHour >= endHour) {
+                    alert('Vrijeme početka mora biti prije vremena završetka.');
+                    return;
+                }
+
+                const duration = endHour - startHour;
+
+                // 1. Izračunaj trenutni trošak
+                let currentCost = 0;
+                for (let i = startHour; i < endHour; i++) {
+                    currentCost += (hourlyPrices[i] / 1000) * kwh;
+                }
+
+                // 2. Pronađi najjeftiniji mogući period
+                let optimalCost = Infinity;
+                for (let i = 0; i <= 24 - duration; i++) {
+                    let windowCost = 0;
+                    for (let j = 0; j < duration; j++) {
+                        windowCost += (hourlyPrices[i + j] / 1000) * kwh;
+                    }
+                    if (windowCost < optimalCost) {
+                        optimalCost = windowCost;
+                    }
+                }
+                
+                // 3. Izračunaj i prikaži uštedu
+                const dailySavings = currentCost - optimalCost;
+                const monthlySavings = dailySavings * 30;
+
+                savingsAmountP.textContent = `€${monthlySavings.toFixed(2)}`;
+                resultDiv.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>
